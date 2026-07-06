@@ -13,9 +13,36 @@ app.config['JSON_SORT_KEYS'] = False
 db.init_app(app)
 CORS(app)
 
+
+def seed_default_services():
+    """Populate the database with default services if none exist."""
+    existing_names = {service.name for service in Service.query.all()}
+
+    services = []
+    for name, description, price, duration in [
+        ('Oil Change', 'Replace engine oil and oil filter', 49.99, 30),
+        ('Brake Pad Replacement', 'Replace front and rear brake pads', 150.00, 90),
+        ('Tire Change', 'Replace tires and balance them', 80.00, 60),
+        ('Inspection Service', 'General vehicle inspection', 99.99, 120),
+        ('Battery Replacement', 'Replace the car battery', 120.00, 30)
+    ]:
+        if name not in existing_names:
+            services.append(Service(
+                name=name,
+                description=description,
+                price=price,
+                duration_minutes=duration
+            ))
+
+    if services:
+        db.session.add_all(services)
+        db.session.commit()
+
+
 # Initialize database
 with app.app_context():
     db.create_all()
+    seed_default_services()
 
 # ==================== CUSTOMERS ENDPOINTS ====================
 
@@ -56,6 +83,36 @@ def get_customer(customer_id):
     customer = Customer.query.get(customer_id)
     if not customer:
         return jsonify({'error': 'Customer not found'}), 404
+    return jsonify(customer.to_dict())
+
+@app.route('/api/customers/<int:customer_id>', methods=['PUT'])
+def update_customer(customer_id):
+    """Update an existing customer"""
+    customer = Customer.query.get(customer_id)
+    if not customer:
+        return jsonify({'error': 'Customer not found'}), 404
+
+    data = request.json or {}
+
+    if 'name' in data:
+        if not str(data['name']).strip():
+            return jsonify({'error': 'Name is required'}), 400
+        customer.name = str(data['name']).strip()
+
+    if 'phone' in data:
+        phone = str(data['phone']).strip()
+        if not phone:
+            return jsonify({'error': 'Phone is required'}), 400
+
+        existing = Customer.query.filter(Customer.phone == phone, Customer.id != customer_id).first()
+        if existing:
+            return jsonify({'error': 'Phone number already exists'}), 409
+        customer.phone = phone
+
+    if 'email' in data:
+        customer.email = str(data['email']).strip() if data['email'] is not None else ''
+
+    db.session.commit()
     return jsonify(customer.to_dict())
 
 # ==================== SERVICES ENDPOINTS ====================

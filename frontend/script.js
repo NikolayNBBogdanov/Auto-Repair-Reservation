@@ -18,6 +18,12 @@ function setupEventListeners() {
         await submitReservation();
     });
 
+    // Customer edit form submission
+    document.getElementById('customer-edit-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await saveCustomer();
+    });
+
     // Date change - reload available time slots
     document.getElementById('reservation-date').addEventListener('change', () => {
         loadAvailableSlots();
@@ -280,9 +286,10 @@ async function loadCustomers() {
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Telefon</th>
+                        <th>Phone</th>
                         <th>Email</th>
                         <th>Joined</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -293,6 +300,9 @@ async function loadCustomers() {
                             <td>${c.phone}</td>
                             <td>${c.email || '-'}</td>
                             <td>${new Date(c.created_at).toLocaleDateString('en-GB')}</td>
+                            <td>
+                                <button class="btn-small" onclick="editCustomer(${c.id})">Edit</button>
+                            </td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -302,5 +312,69 @@ async function loadCustomers() {
         document.getElementById('customers-list').innerHTML = html;
     } catch (error) {
         console.error('Error loading customers:', error);
+    }
+}
+
+async function editCustomer(id) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/customers/${id}`);
+        const customer = await response.json();
+
+        document.getElementById('customer-id').value = customer.id;
+        document.getElementById('edit-customer-name').value = customer.name;
+        document.getElementById('edit-customer-phone').value = customer.phone;
+        document.getElementById('edit-customer-email').value = customer.email || '';
+        document.getElementById('customer-form-title').textContent = `Edit Customer #${customer.id}`;
+        document.getElementById('customer-form-message').className = 'message';
+        document.getElementById('customer-form-message').textContent = '';
+
+        document.getElementById('customers').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (error) {
+        console.error('Error loading customer for edit:', error);
+    }
+}
+
+function cancelCustomerEdit() {
+    document.getElementById('customer-edit-form').reset();
+    document.getElementById('customer-id').value = '';
+    document.getElementById('customer-form-title').textContent = 'Edit Customer';
+    document.getElementById('customer-form-message').className = 'message';
+    document.getElementById('customer-form-message').textContent = '';
+}
+
+async function saveCustomer() {
+    const customerId = document.getElementById('customer-id').value;
+    if (!customerId) {
+        return;
+    }
+
+    const messageDiv = document.getElementById('customer-form-message');
+    const payload = {
+        name: document.getElementById('edit-customer-name').value,
+        phone: document.getElementById('edit-customer-phone').value,
+        email: document.getElementById('edit-customer-email').value
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/customers/${customerId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            messageDiv.textContent = 'Customer updated successfully';
+            messageDiv.className = 'message success';
+            cancelCustomerEdit();
+            await loadCustomers();
+        } else {
+            messageDiv.textContent = result.error || 'Could not update customer';
+            messageDiv.className = 'message error';
+        }
+    } catch (error) {
+        messageDiv.textContent = 'Error updating customer';
+        messageDiv.className = 'message error';
+        console.error('Error updating customer:', error);
     }
 }
