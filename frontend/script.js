@@ -5,6 +5,7 @@ const API_BASE_URL = 'http://localhost:5000/api';
 document.addEventListener('DOMContentLoaded', () => {
     loadDashboard();
     loadServices();
+    loadCustomersForReservation();
     setupEventListeners();
     setMinDate();
 });
@@ -39,12 +40,43 @@ function setupEventListeners() {
             }
         }
     });
+
+    // Existing customer selection - auto-fill customer details
+    document.getElementById('customer-select').addEventListener('change', (e) => {
+        const selectedCustomerId = e.target.value;
+        const nameInput = document.getElementById('customer-name');
+        const phoneInput = document.getElementById('customer-phone');
+        const emailInput = document.getElementById('customer-email');
+
+        if (!selectedCustomerId) {
+            nameInput.disabled = false;
+            phoneInput.disabled = false;
+            emailInput.disabled = false;
+            nameInput.value = '';
+            phoneInput.value = '';
+            emailInput.value = '';
+            return;
+        }
+
+        const customer = customers.find(c => c.id == selectedCustomerId);
+        if (customer) {
+            nameInput.disabled = true;
+            phoneInput.disabled = true;
+            emailInput.disabled = true;
+            nameInput.value = customer.name || '';
+            phoneInput.value = customer.phone || '';
+            emailInput.value = customer.email || '';
+        }
+    });
 }
 
-// Set minimum date to today
+// Set minimum date to today and load the initial time slots
 function setMinDate() {
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('reservation-date').setAttribute('min', today);
+    const dateInput = document.getElementById('reservation-date');
+    dateInput.setAttribute('min', today);
+    dateInput.value = today;
+    loadAvailableSlots();
 }
 
 // ==================== SECTION NAVIGATION ====================
@@ -73,12 +105,22 @@ function showSection(sectionId) {
         loadCustomers();
     } else if (sectionId === 'dashboard') {
         loadDashboard();
+    } else if (sectionId === 'new-reservation') {
+        loadServices();
+        loadCustomersForReservation();
+        const dateInput = document.getElementById('reservation-date');
+        if (!dateInput.value) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+        }
+        loadAvailableSlots();
     }
 }
 
 // ==================== DASHBOARD ====================
 
 let services = [];
+let customers = [];
 
 async function loadDashboard() {
     try {
@@ -118,6 +160,23 @@ async function loadServices() {
             services.map(service => `<option value="${service.id}">${service.name} (€${service.price.toFixed(2)})</option>`).join('');
     } catch (error) {
         console.error('Error loading services:', error);
+    }
+}
+
+async function loadCustomersForReservation() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/customers`);
+        customers = await response.json();
+
+        const customerSelect = document.getElementById('customer-select');
+        if (!customerSelect) return;
+
+        customerSelect.innerHTML = '<option value="">-- Add new customer --</option>' +
+            customers.map(customer => `
+                <option value="${customer.id}">${customer.name} (${customer.phone})</option>
+            `).join('');
+    } catch (error) {
+        console.error('Error loading customers for reservation form:', error);
     }
 }
 
@@ -190,9 +249,9 @@ async function loadAvailableSlots() {
 }
 
 async function submitReservation() {
-    const customerName = document.getElementById('customer-name').value;
-    const customerPhone = document.getElementById('customer-phone').value;
-    const customerEmail = document.getElementById('customer-email').value;
+    const customerName = document.getElementById('customer-name').value.trim();
+    const customerPhone = document.getElementById('customer-phone').value.trim();
+    const customerEmail = document.getElementById('customer-email').value.trim();
     const serviceId = document.getElementById('service-select').value;
     const reservationDate = document.getElementById('reservation-date').value;
     const timeSlot = document.getElementById('time-slot').value;
@@ -201,19 +260,29 @@ async function submitReservation() {
     const messageDiv = document.getElementById('form-message');
 
     try {
-        // Step 1: Create or get customer
-        const customerRes = await fetch(`${API_BASE_URL}/customers`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: customerName,
-                phone: customerPhone,
-                email: customerEmail
-            })
-        });
+        const selectedCustomerId = document.getElementById('customer-select').value;
+        let customerId = selectedCustomerId;
 
-        const customer = await customerRes.json();
-        const customerId = customer.id;
+        if (!customerId) {
+            if (!customerName || !customerPhone) {
+                messageDiv.textContent = '✗ Please choose an existing customer or enter a new name and phone.';
+                messageDiv.className = 'message error';
+                return;
+            }
+
+            const customerRes = await fetch(`${API_BASE_URL}/customers`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: customerName,
+                    phone: customerPhone,
+                    email: customerEmail
+                })
+            });
+
+            const customer = await customerRes.json();
+            customerId = customer.id;
+        }
 
         // Step 2: Create reservation
         const reservationRes = await fetch(`${API_BASE_URL}/reservations`, {

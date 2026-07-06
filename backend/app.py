@@ -6,7 +6,8 @@ import os
 from models import db, Customer, Service, Reservation
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///repair_shop.db'
+db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'repair_shop.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JSON_SORT_KEYS'] = False
 
@@ -37,6 +38,33 @@ def seed_default_services():
     if services:
         db.session.add_all(services)
         db.session.commit()
+
+
+def resolve_customer_for_reservation(data):
+    """Resolve a customer id from either an existing selection or new form fields."""
+    if data.get('customer_id'):
+        customer_id = int(data['customer_id'])
+        if not Customer.query.get(customer_id):
+            raise ValueError('Customer not found')
+        return customer_id
+
+    name = str(data.get('name', '')).strip()
+    phone = str(data.get('phone', '')).strip()
+    if not name or not phone:
+        raise ValueError('Customer name and phone required')
+
+    existing = Customer.query.filter_by(phone=phone).first()
+    if existing:
+        return existing.id
+
+    customer = Customer(
+        name=name,
+        phone=phone,
+        email=str(data.get('email', '')).strip() if data.get('email') is not None else ''
+    )
+    db.session.add(customer)
+    db.session.commit()
+    return customer.id
 
 
 # Initialize database
@@ -120,6 +148,7 @@ def update_customer(customer_id):
 @app.route('/api/services', methods=['GET'])
 def get_services():
     """Get all available services"""
+    seed_default_services()
     services = Service.query.all()
     return jsonify([s.to_dict() for s in services])
 
@@ -162,41 +191,46 @@ def get_reservations():
 @app.route('/api/reservations', methods=['POST'])
 def create_reservation():
     """Create new reservation"""
-    data = request.json
-    
+    data = request.json or {}
+
+    try:
+        customer_id = resolve_customer_for_reservation(data)
+    except ValueError as exc:
+        return jsonify({'error': str(exc)}), 400
+
     # Validation
-    required_fields = ['customer_id', 'service_id', 'reservation_date', 'time_slot']
+    required_fields = ['service_id', 'reservation_date', 'time_slot']
     if not all(field in data for field in required_fields):
         return jsonify({'error': 'Missing required fields'}), 400
-    
+
     # Check if time slot is already booked
     existing = Reservation.query.filter_by(
         reservation_date=data['reservation_date'],
         time_slot=data['time_slot'],
         status='confirmed'
     ).first()
-    
+
     if existing:
         return jsonify({'error': 'Time slot already booked'}), 409
-    
+
     # Verify customer and service exist
-    if not Customer.query.get(data['customer_id']):
+    if not Customer.query.get(customer_id):
         return jsonify({'error': 'Customer not found'}), 404
     if not Service.query.get(data['service_id']):
         return jsonify({'error': 'Service not found'}), 404
-    
+
     reservation = Reservation(
-        customer_id=int(data['customer_id']),
+        customer_id=int(customer_id),
         service_id=int(data['service_id']),
         reservation_date=data['reservation_date'],
         time_slot=data['time_slot'],
         notes=data.get('notes', ''),
         status='confirmed'
     )
-    
+
     db.session.add(reservation)
     db.session.commit()
-    
+
     return jsonify(reservation.to_dict()), 201
 
 @app.route('/api/reservations/<int:reservation_id>', methods=['GET'])

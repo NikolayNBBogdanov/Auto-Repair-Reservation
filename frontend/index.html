@@ -60,13 +60,21 @@
             <h2>Create New Reservation</h2>
             <form id="reservation-form" class="form-container">
                 <div class="form-group">
+                    <label>Existing Customer</label>
+                    <select id="customer-select">
+                        <option value="">-- Add new customer --</option>
+                    </select>
+                    <small style="display: block; margin-top: 6px; color: #666;">Choose an existing customer or leave this empty to add a new one.</small>
+                </div>
+
+                <div class="form-group">
                     <label>Customer Name *</label>
-                    <input type="text" id="customer-name" placeholder="John Smith" required>
+                    <input type="text" id="customer-name" placeholder="John Smith">
                 </div>
 
                 <div class="form-group">
                     <label>Phone *</label>
-                    <input type="tel" id="customer-phone" placeholder="0123456789" required>
+                    <input type="tel" id="customer-phone" placeholder="0123456789">
                 </div>
 
                 <div class="form-group">

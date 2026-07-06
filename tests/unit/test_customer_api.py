@@ -5,7 +5,7 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'backend'))
 
-from app import app, db, seed_default_services
+from app import app, db, seed_default_services, resolve_customer_for_reservation
 from models import Customer
 
 
@@ -55,6 +55,17 @@ class CustomerApiTests(unittest.TestCase):
         data = response.get_json()
         self.assertGreaterEqual(len(data), 1)
         self.assertIn('name', data[0])
+
+    def test_resolve_customer_for_reservation_uses_existing_customer_id(self):
+        with app.app_context():
+            customer = Customer(name='Existing Customer', phone='111222', email='existing@example.com')
+            db.session.add(customer)
+            db.session.commit()
+            customer_id = customer.id
+
+            resolved_id = resolve_customer_for_reservation({'customer_id': customer_id})
+
+        self.assertEqual(resolved_id, customer_id)
 
 
 if __name__ == '__main__':
