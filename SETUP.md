@@ -12,9 +12,8 @@
 ### 1. Repository klonen
 
 ```bash
-git clone https://github.com/NikolayNBBogdanov/nikolay.bogdanov-regular-exam.git
-cd nikolay.bogdanov-regular-exam
-git checkout auto-repair-reservation
+git clone -b auto-repair-reservation https://github.com/NikolayNBBogdanov/Auto-Repair-Reservation.git
+cd Auto-Repair-Reservation
 ```
 
 ### 2. Python Virtual Environment erstellen
