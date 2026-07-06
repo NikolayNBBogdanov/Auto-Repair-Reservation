@@ -1,91 +1,91 @@
 # Auto Repair Shop Reservation System
 
-Ein vollständiges Reservierungssystem für eine Autowerkstatt mit Backend-API und Frontend-Anwendung.
+A complete reservation system for an auto repair shop with a backend API and frontend application.
 
-## Projektstruktur
+## Project Structure
 
 ```
 auto-repair-shop-reservation/
 ├── backend/              # Flask/Python REST API
-├── frontend/             # HTML/CSS/JavaScript Frontend
-├── docs/                 # Projektdokumentation
-└── README.md            # Dieses Dokument
+├── frontend/             # HTML/CSS/JavaScript frontend
+├── docs/                 # Project documentation
+└── README.md            # This document
 ```
 
 ## Features
 
-- ✅ Kundenverwaltung
-- ✅ Servicetypen & Pricing
-- ✅ Reservierungssystem mit Zeitslots
-- ✅ Verfügbarkeitsprüfung
-- ✅ Admin Dashboard mit Statistiken
-- ✅ REST API mit vollständiger CRUD-Funktionalität
-- ✅ Responsive Web-Interface
+- ✅ Customer management
+- ✅ Service types & pricing
+- ✅ Reservation system with time slots
+- ✅ Availability checking
+- ✅ Admin dashboard with statistics
+- ✅ REST API with full CRUD functionality
+- ✅ Responsive web interface
 
-## Technologie Stack
+## Tech Stack
 
 **Backend:**
 - Python 3.8+
-- Flask (Web Framework)
+- Flask (web framework)
 - Flask-SQLAlchemy (ORM)
-- SQLite (Datenbank)
-- Flask-CORS (CORS Support)
+- SQLite (database)
+- Flask-CORS (CORS support)
 
 **Frontend:**
 - HTML5
-- CSS3 (Responsive Design)
+- CSS3 (responsive design)
 - Vanilla JavaScript (ES6+)
 - Fetch API
 
-## Installation & Ausführung
+## Installation & Running
 
-Detaillierte Anweisungen findest du in [SETUP.md](./SETUP.md)
+Detailed instructions can be found in [SETUP.md](./SETUP.md)
 
-## Schnelstart
+## Quick Start
 
-### Backend starten:
+### Start the backend:
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # oder venv\Scripts\activate auf Windows
+source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
 python init_db.py
 python app.py
 ```
 
-Server läuft unter: `http://localhost:5000`
+The server runs at `http://localhost:5000`
 
-### Frontend öffnen:
+### Open the frontend:
 ```bash
-Öffne frontend/index.html im Browser
+Open frontend/index.html in your browser
 ```
 
 ## API Endpoints
 
 ### Customers
-- `GET /api/customers` - Alle Kunden abrufen
-- `POST /api/customers` - Neuen Kunden erstellen
+- `GET /api/customers` - Retrieve all customers
+- `POST /api/customers` - Create a new customer
 
 ### Services
-- `GET /api/services` - Alle Services abrufen
-- `POST /api/services` - Neuen Service erstellen
+- `GET /api/services` - Retrieve all services
+- `POST /api/services` - Create a new service
 
 ### Reservations
-- `GET /api/reservations` - Alle Reservierungen abrufen
-- `POST /api/reservations` - Neue Reservierung erstellen
-- `GET /api/reservations/<id>` - Spezifische Reservierung abrufen
-- `PUT /api/reservations/<id>` - Reservierung aktualisieren
-- `DELETE /api/reservations/<id>` - Reservierung stornieren
+- `GET /api/reservations` - Retrieve all reservations
+- `POST /api/reservations` - Create a new reservation
+- `GET /api/reservations/<id>` - Retrieve a specific reservation
+- `PUT /api/reservations/<id>` - Update a reservation
+- `DELETE /api/reservations/<id>` - Cancel a reservation
 
 ### Availability
-- `GET /api/availability?date=YYYY-MM-DD` - Verfügbare Zeitslots abrufen
+- `GET /api/availability?date=YYYY-MM-DD` - Retrieve available time slots
 
 ### Statistics
-- `GET /api/statistics` - Dashboard-Statistiken abrufen
+- `GET /api/statistics` - Retrieve dashboard statistics
 
-## Beispiel API Calls
+## Example API Calls
 
-### Kundenregistrierung
+### Customer registration
 ```bash
 curl -X POST http://localhost:5000/api/customers \
   -H "Content-Type: application/json" \
@@ -96,7 +96,7 @@ curl -X POST http://localhost:5000/api/customers \
   }'
 ```
 
-### Reservierung erstellen
+### Create reservation
 ```bash
 curl -X POST http://localhost:5000/api/reservations \
   -H "Content-Type: application/json" \
@@ -105,58 +105,58 @@ curl -X POST http://localhost:5000/api/reservations \
     "service_id": 1,
     "reservation_date": "2026-07-15",
     "time_slot": "09:00",
-    "notes": "Standardwechsel"
+    "notes": "Regular service"
   }'
 ```
 
-### Verfügbarkeit prüfen
+### Check availability
 ```bash
 curl http://localhost:5000/api/availability?date=2026-07-15
 ```
 
-## Projektstruktur Detail
+## Detailed Project Structure
 
 ```
 backend/
-├── app.py              # Flask Hauptanwendung & API-Endpoints
-├── models.py           # SQLAlchemy Datenmodelle
-├── init_db.py          # Datenbankinitialisierung mit Sample-Daten
-├── requirements.txt    # Python Dependencies
-└── repair_shop.db      # SQLite Datenbank (wird auto-generiert)
+├── app.py              # Main Flask application and API endpoints
+├── models.py           # SQLAlchemy data models
+├── init_db.py          # Database initialization with sample data
+├── requirements.txt    # Python dependencies
+└── repair_shop.db      # SQLite database (generated automatically)
 
 frontend/
-├── index.html          # HTML-Struktur & Navigaation
-├── script.js           # JavaScript Logik & API-Kommunikation
-└── style.css           # Responsive CSS Styling
+├── index.html          # HTML structure and navigation
+├── script.js           # JavaScript logic and API communication
+└── style.css           # Responsive CSS styling
 
 docs/
-└── DEVELOPMENT.md      # AI-Assisted Development Dokumentation
+└── DEVELOPMENT.md      # AI-assisted development documentation
 ```
 
-## Features Detailiert
+## Detailed Features
 
 ### 1. Dashboard
-- Übersicht der Statistiken
-- Verfügbare Services anzeigen
-- Schneller Zugriff auf alle Funktionen
+- Overview of statistics
+- Display available services
+- Quick access to all functions
 
-### 2. Reservierungssystem
-- Automatische Konfliktprüfung
-- Verfügbare Zeitslots anzeigen
-- Kundendaten speichern
-- Reservierung mit Notizen
+### 2. Reservation system
+- Automatic conflict checking
+- Display available time slots
+- Store customer data
+- Add notes to reservations
 
-### 3. Kundenverwaltung
-- Automatische Kundenerstellung
-- Telefon-basierte Duplikatsprüfung
-- Kontaktdetails speichern
+### 3. Customer management
+- Automatic customer creation
+- Phone-based duplicate checking
+- Store contact details
 
-### 4. Service-Katalog
-- Verschiedene Service-Typen
-- Preisübersicht
-- Zeitaufwand pro Service
+### 4. Service catalog
+- Different service types
+- Price overview
+- Time required per service
 
-## Datenbank Schema
+## Database Schema
 
 ### Customers
 - id (PRIMARY KEY)
@@ -185,20 +185,20 @@ docs/
 
 ## Testing
 
-### Mit Postman
-1. Importiere `docs/postman_collection.json`
-2. Führe die Requests durch
+### With Postman
+1. Import `docs/postman_collection.json`
+2. Run the requests
 
-### Mit curl (siehe Beispiele oben)
+### With curl (see examples above)
 
-### Manuell
-1. Öffne das Frontend
-2. Fülle das Reservierungsformular aus
-3. Überprüfe die Daten im Dashboard
+### Manually
+1. Open the frontend
+2. Fill out the reservation form
+3. Check the data in the dashboard
 
 ## Troubleshooting
 
-### Port 5000 ist bereits in Benutzung
+### Port 5000 is already in use
 ```bash
 # Windows
 netstat -ano | findstr :5000
@@ -209,39 +209,39 @@ lsof -i :5000
 kill -9 <PID>
 ```
 
-### Module nicht gefunden
+### Module not found
 ```bash
 deactivate
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### CORS-Fehler
-Das ist normal bei lokalem Testen - wird durch Flask-CORS gelöst
+### CORS errors
+This is normal during local testing and is handled by Flask-CORS.
 
-## Zukünftige Verbesserungen
+## Future Improvements
 
-- [ ] Benutzerauthentifizierung
-- [ ] Email-Benachrichtigungen
-- [ ] SMS-Reminders
-- [ ] Admin-Dashboard mit Metriken
-- [ ] Zahlungsintegration
-- [ ] Mobile App (React Native)
-- [ ] Termin-Synchronisation (Google Calendar)
-- [ ] Bewertungssystem
+- [ ] User authentication
+- [ ] Email notifications
+- [ ] SMS reminders
+- [ ] Admin dashboard metrics
+- [ ] Payment integration
+- [ ] Mobile app (React Native)
+- [ ] Calendar synchronization (Google Calendar)
+- [ ] Rating system
 
-## Dokumentation
+## Documentation
 
-Siehe [DEVELOPMENT.md](./docs/DEVELOPMENT.md) für AI-Assisted Development Details:
-- Projektansatz pro Modul
-- AI Tool Vergleich
-- Entwicklungsprozess
-- Screenshots und Beweise
+See [DEVELOPMENT.md](./docs/DEVELOPMENT.md) for AI-assisted development details:
+- Module-by-module approach
+- AI tool comparison
+- Development process
+- Screenshots and evidence
 
-## Lizenz
+## License
 
 MIT License
 
-## Kontakt
+## Contact
 
 Nikolay Bogdanov - GitHub: @NikolayNBBogdanov

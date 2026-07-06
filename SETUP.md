@@ -1,22 +1,22 @@
-# Installation & Ausführung Guide
+# Installation & Running Guide
 
-## Voraussetzungen
+## Prerequisites
 
 - **Python 3.8+** - [Download](https://www.python.org/downloads/)
 - **Git** - [Download](https://git-scm.com/)
-- Ein beliebiger **Text-Editor oder IDE** (VS Code, PyCharm, etc.)
-- Moderne **Browser** (Chrome, Firefox, Safari, Edge)
+- Any **text editor or IDE** (VS Code, PyCharm, etc.)
+- Modern **browser** (Chrome, Firefox, Safari, Edge)
 
-## Schritt-für-Schritt Installation
+## Step-by-step Installation
 
-### 1. Repository klonen
+### 1. Clone the repository
 
 ```bash
 git clone -b auto-repair-reservation https://github.com/NikolayNBBogdanov/Auto-Repair-Reservation.git
 cd Auto-Repair-Reservation
 ```
 
-### 2. Python Virtual Environment erstellen
+### 2. Create a Python virtual environment
 
 **Windows:**
 ```bash
@@ -30,110 +30,110 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Dependencies installieren
+### 3. Install dependencies
 
 ```bash
 cd backend
 pip install -r requirements.txt
 ```
 
-Das sollte folgende Pakete installieren:
-- Flask (Web Framework)
-- Flask-CORS (Cross-Origin Support)
-- Flask-SQLAlchemy (Datenbank ORM)
-- SQLAlchemy (SQL Toolkit)
+This should install:
+- Flask (web framework)
+- Flask-CORS (cross-origin support)
+- Flask-SQLAlchemy (database ORM)
+- SQLAlchemy (SQL toolkit)
 
-### 4. Datenbank initialisieren
+### 4. Initialize the database
 
 ```bash
 python init_db.py
 ```
 
-Output sollte sein:
+Expected output:
 ```
 ✓ Database tables created
-✓ 5 Services hinzugefügt
-✓ 3 Kunden hinzugefügt
-✓ 3 Reservierungen hinzugefügt
+✓ 5 services added
+✓ 3 customers added
+✓ 3 reservations added
 
-✓✓✓ Datenbank erfolgreich initialisiert! ✓✓✓
+✓✓✓ Database initialized successfully! ✓✓✓
 ```
 
-### 5. Backend-Server starten
+### 5. Start the backend server
 
 ```bash
 python app.py
 ```
 
-Output sollte sein:
+Expected output:
 ```
  * Running on http://127.0.0.1:5000
  * Debug mode: on
 ```
 
-✅ **Backend ist jetzt läuft unter:** `http://localhost:5000`
+✅ **The backend is now running at:** `http://localhost:5000`
 
-### 6. Frontend öffnen
+### 6. Open the frontend
 
-**Option A - Direkt im Browser:**
-- Navigiere zum `frontend/` Ordner
-- Rechtsklick auf `index.html`
-- Wähle "Mit Browser öffnen"
+**Option A - Open directly in the browser:**
+- Navigate to the `frontend/` folder
+- Right-click `index.html`
+- Choose "Open with Browser"
 
-**Option B - Mit Live Server (VS Code):**
-1. Installiere Extension: "Live Server" von Ritwick Dey
-2. Rechtsklick auf `frontend/index.html`
-3. Wähle "Open with Live Server"
+**Option B - With Live Server (VS Code):**
+1. Install the extension: "Live Server" by Ritwick Dey
+2. Right-click `frontend/index.html`
+3. Choose "Open with Live Server"
 
-✅ **Frontend sollte jetzt offen sein unter:** `http://localhost:5500` (oder ähnlich)
+✅ **The frontend should now be open at:** `http://localhost:5500` (or similar)
 
-## Verifizierung
+## Verification
 
-### 1. API ist erreichbar
+### 1. API is reachable
 ```bash
 curl http://localhost:5000/health
 ```
 
-Ergebnis:
+Result:
 ```json
 {"status":"OK","timestamp":"2026-07-06T10:00:00.000000"}
 ```
 
-### 2. Services laden
+### 2. Services load
 ```bash
 curl http://localhost:5000/api/services
 ```
 
-Ergebnis: Liste von 5 Services sollte angezeigt werden
+Result: A list of 5 services should be displayed.
 
-### 3. Frontend lädt
-- Öffne `http://localhost:5500/frontend/index.html`
-- Dashboard mit Statistiken sollte sichtbar sein
-- Navigation sollte funktionieren
+### 3. Frontend loads
+- Open `http://localhost:5500/frontend/index.html`
+- The dashboard with statistics should be visible
+- Navigation should work
 
-## Verwendung
+## Usage
 
-### Dashboard erkunden
-1. Starte das Frontend
-2. Du siehst das Dashboard mit Statistiken
-3. Klicke auf "Neue Reservierung"
-4. Fülle das Formular aus
-5. Wähle einen verfügbaren Zeitslot
-6. Klicke "Reservierung erstellen"
+### Explore the dashboard
+1. Start the frontend
+2. You will see the dashboard with statistics
+3. Click "New Reservation"
+4. Fill out the form
+5. Choose an available time slot
+6. Click "Create Reservation"
 
-### API testen mit curl
+### Test the API with curl
 
-**Alle Kunden abrufen:**
+**Retrieve all customers:**
 ```bash
 curl http://localhost:5000/api/customers
 ```
 
-**Alle Reservierungen abrufen:**
+**Retrieve all reservations:**
 ```bash
 curl http://localhost:5000/api/reservations
 ```
 
-**Neue Reservierung erstellen:**
+**Create a new reservation:**
 ```bash
 curl -X POST http://localhost:5000/api/reservations \
   -H "Content-Type: application/json" \
@@ -142,25 +142,25 @@ curl -X POST http://localhost:5000/api/reservations \
     "service_id": 2,
     "reservation_date": "2026-07-20",
     "time_slot": "11:00",
-    "notes": "Bitte vorsichtig behandeln"
+    "notes": "Please handle with care"
   }'
 ```
 
-**Verfügbare Slots für ein Datum:**
+**Available slots for a date:**
 ```bash
 curl "http://localhost:5000/api/availability?date=2026-07-15"
 ```
 
-### API testen mit Postman
+### Test the API with Postman
 
-1. Lade Postman herunter: https://www.postman.com/downloads/
-2. Öffne Postman
-3. Erstelle neue Request:
+1. Download Postman: https://www.postman.com/downloads/
+2. Open Postman
+3. Create a new request:
    - **Method:** GET
    - **URL:** http://localhost:5000/api/statistics
-   - Klick "Send"
+   - Click "Send"
 
-## Häufige Probleme & Lösungen
+## Common Issues & Solutions
 
 ### Problem: "Port 5000 already in use"
 
@@ -176,46 +176,46 @@ lsof -i :5000
 kill -9 <PID>
 ```
 
-Oder ändere den Port in `backend/app.py`:
+Or change the port in `backend/app.py`:
 ```python
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)  # Neuer Port
+    app.run(debug=True, port=5001)  # New port
 ```
 
 ### Problem: "ModuleNotFoundError: No module named 'flask'"
 
 ```bash
-# Virtual Environment deaktivieren
+# Deactivate the virtual environment
 deactivate
 
-# Neu aktivieren
+# Reactivate it
 source venv/bin/activate  # macOS/Linux
 venv\Scripts\activate     # Windows
 
-# Dependencies neu installieren
+# Reinstall dependencies
 pip install -r requirements.txt
 ```
 
 ### Problem: "No such table: customers"
 
 ```bash
-# Datenbank neu initialisieren
+# Reinitialize the database
 python init_db.py
 ```
 
-### Problem: CORS-Fehler im Browser Console
+### Problem: CORS errors in the browser console
 
-Das ist normal bei lokalem Testen. Flask-CORS kümmert sich darum. Überprüfe, dass:
-1. Backend läuft auf `http://localhost:5000`
-2. Frontend lädt die API korrekt
+This is normal during local testing. Flask-CORS handles it. Make sure that:
+1. The backend is running at `http://localhost:5000`
+2. The frontend is loading the API correctly
 
-### Problem: Frontend lädt nicht
+### Problem: Frontend does not load
 
-1. Überprüfe, dass die Datei `frontend/index.html` existiert
-2. Öffne Developer Console (F12) auf Fehler zu prüfen
-3. Stelle sicher, dass keine Datei-Zugriffs-Probleme vorliegen
+1. Check that the file `frontend/index.html` exists
+2. Open the Developer Console (F12) to look for errors
+3. Make sure there are no file access issues
 
-## Projektstruktur Erklärung
+## Project Structure Explanation
 
 ```
 project/

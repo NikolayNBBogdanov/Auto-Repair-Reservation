@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Repair Shop - Reservierungssystem</title>
+    <title>Auto Repair Shop - Reservation System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,9 +15,9 @@
             </div>
             <div class="navbar-menu">
                 <button class="nav-btn active" onclick="showSection('dashboard')">Dashboard</button>
-                <button class="nav-btn" onclick="showSection('reservations')">Reservierungen</button>
-                <button class="nav-btn" onclick="showSection('new-reservation')">Neue Reservierung</button>
-                <button class="nav-btn" onclick="showSection('customers')">Kunden</button>
+                <button class="nav-btn" onclick="showSection('reservations')">Reservations</button>
+                <button class="nav-btn" onclick="showSection('new-reservation')">New Reservation</button>
+                <button class="nav-btn" onclick="showSection('customers')">Customers</button>
             </div>
         </nav>
 
@@ -26,46 +26,46 @@
             <h2>Dashboard</h2>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h3>Gesamtkunden</h3>
+                    <h3>Total Customers</h3>
                     <p class="stat-number" id="stat-customers">0</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Reservierungen</h3>
+                    <h3>Reservations</h3>
                     <p class="stat-number" id="stat-reservations">0</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Bestätigt</h3>
+                    <h3>Confirmed</h3>
                     <p class="stat-number" id="stat-confirmed">0</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Storniert</h3>
+                    <h3>Cancelled</h3>
                     <p class="stat-number" id="stat-cancelled">0</p>
                 </div>
             </div>
 
             <div class="services-section">
-                <h3>Unsere Services</h3>
+                <h3>Our Services</h3>
                 <div id="services-list" class="services-grid"></div>
             </div>
         </section>
 
         <!-- Reservations Section -->
         <section id="reservations" class="section">
-            <h2>Reservierungen</h2>
+            <h2>Reservations</h2>
             <div id="reservations-list" class="reservations-table"></div>
         </section>
 
         <!-- New Reservation Section -->
         <section id="new-reservation" class="section">
-            <h2>Neue Reservierung erstellen</h2>
+            <h2>Create New Reservation</h2>
             <form id="reservation-form" class="form-container">
                 <div class="form-group">
-                    <label>Kundenname *</label>
-                    <input type="text" id="customer-name" placeholder="Max Müller" required>
+                    <label>Customer Name *</label>
+                    <input type="text" id="customer-name" placeholder="John Smith" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Telefon *</label>
+                    <label>Phone *</label>
                     <input type="tel" id="customer-phone" placeholder="0123456789" required>
                 </div>
 
@@ -77,35 +77,35 @@
                 <div class="form-group">
                     <label>Service *</label>
                     <select id="service-select" required>
-                        <option value="">-- Wählen Sie einen Service --</option>
+                        <option value="">-- Select a service --</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Reservierungsdatum *</label>
+                    <label>Reservation Date *</label>
                     <input type="date" id="reservation-date" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Zeitfenster *</label>
+                    <label>Time Slot *</label>
                     <select id="time-slot" required>
-                        <option value="">-- Wählen Sie einen Zeitslot --</option>
+                        <option value="">-- Select a time slot --</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Notizen</label>
-                    <textarea id="reservation-notes" placeholder="Zusätzliche Informationen..." rows="3"></textarea>
+                    <label>Notes</label>
+                    <textarea id="reservation-notes" placeholder="Additional information..." rows="3"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Reservierung erstellen</button>
+                <button type="submit" class="btn btn-primary">Create Reservation</button>
                 <div id="form-message" class="message"></div>
             </form>
         </section>
 
         <!-- Customers Section -->
         <section id="customers" class="section">
-            <h2>Kundenverwaltung</h2>
+            <h2>Customer Management</h2>
             <div id="customers-list" class="customers-table"></div>
         </section>
     </div>

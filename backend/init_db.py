@@ -27,32 +27,32 @@ def init_database():
         # Add sample services
         services = [
             Service(
-                name="Ölwechsel",
-                description="Motoröl und Ölfilter wechseln",
+                name="Oil Change",
+                description="Replace engine oil and oil filter",
                 price=49.99,
                 duration_minutes=30
             ),
             Service(
-                name="Bremsbelagsersatz",
-                description="Bremsbeläge vorne/hinten ersetzen",
+                name="Brake Pad Replacement",
+                description="Replace front and rear brake pads",
                 price=150.00,
                 duration_minutes=90
             ),
             Service(
-                name="Reifenwechsel",
-                description="Reifen wechseln und auswuchten",
+                name="Tire Change",
+                description="Replace tires and balance them",
                 price=80.00,
                 duration_minutes=60
             ),
             Service(
-                name="Inspektionsservice",
-                description="Allgemeine Fahrzeuginspektionen",
+                name="Inspection Service",
+                description="General vehicle inspection",
                 price=99.99,
                 duration_minutes=120
             ),
             Service(
-                name="Batteriereplacment",
-                description="Autobatterie ersetzen",
+                name="Battery Replacement",
+                description="Replace the car battery",
                 price=120.00,
                 duration_minutes=30
             )
@@ -62,7 +62,7 @@ def init_database():
             db.session.add(service)
         
         db.session.commit()
-        print(f"✓ {len(services)} Services hinzugefügt")
+        print(f"✓ {len(services)} services added")
         
         # Add sample customers
         customers = [
@@ -87,7 +87,7 @@ def init_database():
             db.session.add(customer)
         
         db.session.commit()
-        print(f"✓ {len(customers)} Kunden hinzugefügt")
+        print(f"✓ {len(customers)} customers added")
         
         # Add sample reservations
         today = datetime.now().date()
@@ -97,7 +97,7 @@ def init_database():
                 service_id=1,
                 reservation_date=(today + timedelta(days=9)).isoformat(),
                 time_slot="09:00",
-                notes="Standardwechsel",
+                notes="Regular service",
                 status="confirmed"
             ),
             Reservation(
@@ -105,7 +105,7 @@ def init_database():
                 service_id=2,
                 reservation_date=(today + timedelta(days=10)).isoformat(),
                 time_slot="10:00",
-                notes="Vorderbremsen ersetzen",
+                notes="Replace front brakes",
                 status="confirmed"
             ),
             Reservation(
@@ -113,7 +113,7 @@ def init_database():
                 service_id=3,
                 reservation_date=(today + timedelta(days=11)).isoformat(),
                 time_slot="14:00",
-                notes="Sommerkomplettwechsel",
+                notes="Summer tire set change",
                 status="confirmed"
             )
         ]
@@ -122,11 +122,11 @@ def init_database():
             db.session.add(reservation)
         
         db.session.commit()
-        print(f"✓ {len(reservations)} Reservierungen hinzugefügt")
+        print(f"✓ {len(reservations)} reservations added")
         
-        print("\n✓✓✓ Datenbank erfolgreich initialisiert! ✓✓✓\n")
-        print("Backend starten mit: python app.py")
-        print("Frontend öffnen: frontend/index.html")
+        print("\n✓✓✓ Database initialized successfully! ✓✓✓\n")
+        print("Start backend with: python app.py")
+        print("Open frontend: frontend/index.html")
 
 if __name__ == '__main__':
     init_database()

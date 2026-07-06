@@ -29,7 +29,7 @@ function setupEventListeners() {
         if (serviceId) {
             const service = services.find(s => s.id == serviceId);
             if (service) {
-                console.log(`Ausgewählt: ${service.name} - €${service.price}`);
+                console.log(`Selected: ${service.name} - €${service.price}`);
             }
         }
     });
@@ -84,7 +84,7 @@ async function loadDashboard() {
         document.getElementById('stat-confirmed').textContent = stats.confirmed_reservations;
         document.getElementById('stat-cancelled').textContent = stats.cancelled_reservations;
     } catch (error) {
-        console.error('Fehler beim Laden der Statistiken:', error);
+        console.error('Error loading statistics:', error);
     }
 }
 
@@ -108,10 +108,10 @@ async function loadServices() {
 
         // Populate service dropdown
         const serviceSelect = document.getElementById('service-select');
-        serviceSelect.innerHTML = '<option value="">-- Wählen Sie einen Service --</option>' +
+        serviceSelect.innerHTML = '<option value="">-- Select a service --</option>' +
             services.map(service => `<option value="${service.id}">${service.name} (€${service.price.toFixed(2)})</option>`).join('');
     } catch (error) {
-        console.error('Fehler beim Laden der Services:', error);
+        console.error('Error loading services:', error);
     }
 }
 
@@ -127,13 +127,13 @@ async function loadReservations() {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Kunde</th>
+                        <th>Customer</th>
                         <th>Service</th>
-                        <th>Datum</th>
-                        <th>Zeit</th>
+                        <th>Date</th>
+                        <th>Time</th>
                         <th>Status</th>
-                        <th>Preis</th>
-                        <th>Aktionen</th>
+                        <th>Price</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -147,17 +147,17 @@ async function loadReservations() {
                             <td><span class="status status-${r.status}">${r.status}</span></td>
                             <td>€${r.service_price.toFixed(2)}</td>
                             <td>
-                                <button class="btn-small btn-danger" onclick="cancelReservation(${r.id})">Stornieren</button>
+                                <button class="btn-small btn-danger" onclick="cancelReservation(${r.id})">Cancel</button>
                             </td>
                         </tr>
                     `).join('')}
                 </tbody>
             </table>
-        ` : '<p>Keine Reservierungen gefunden</p>';
+        ` : '<p>No reservations found</p>';
 
         document.getElementById('reservations-list').innerHTML = html;
     } catch (error) {
-        console.error('Fehler beim Laden der Reservierungen:', error);
+        console.error('Error loading reservations:', error);
     }
 }
 
@@ -172,14 +172,14 @@ async function loadAvailableSlots() {
         const data = await response.json();
 
         const timeSlotSelect = document.getElementById('time-slot');
-        timeSlotSelect.innerHTML = '<option value="">-- Wählen Sie einen Zeitslot --</option>' +
+        timeSlotSelect.innerHTML = '<option value="">-- Select a time slot --</option>' +
             data.available_slots.map(slot => `<option value="${slot}">${slot} Uhr</option>`).join('');
 
         if (data.available_slots.length === 0) {
-            timeSlotSelect.innerHTML += '<option disabled>Keine freien Zeitslots</option>';
+            timeSlotSelect.innerHTML += '<option disabled>No free time slots</option>';
         }
     } catch (error) {
-        console.error('Fehler beim Laden der verfügbaren Slots:', error);
+        console.error('Error loading available slots:', error);
     }
 }
 
@@ -224,7 +224,7 @@ async function submitReservation() {
 
         if (reservationRes.ok) {
             const reservation = await reservationRes.json();
-            messageDiv.textContent = `✓ Reservierung erfolgreich erstellt! (ID: ${reservation.id})`;
+            messageDiv.textContent = `✓ Reservation created successfully! (ID: ${reservation.id})`;
             messageDiv.className = 'message success';
             
             // Reset form
@@ -238,18 +238,18 @@ async function submitReservation() {
             }, 1500);
         } else {
             const error = await reservationRes.json();
-            messageDiv.textContent = `✗ Fehler: ${error.error}`;
+            messageDiv.textContent = `✗ Error: ${error.error}`;
             messageDiv.className = 'message error';
         }
     } catch (error) {
-        messageDiv.textContent = `✗ Fehler: ${error.message}`;
+        messageDiv.textContent = `✗ Error: ${error.message}`;
         messageDiv.className = 'message error';
-        console.error('Fehler:', error);
+        console.error('Error:', error);
     }
 }
 
 async function cancelReservation(id) {
-    if (!confirm('Reservierung wirklich stornieren?')) return;
+    if (!confirm('Do you really want to cancel this reservation?')) return;
 
     try {
         const response = await fetch(`${API_BASE_URL}/reservations/${id}`, {
@@ -257,13 +257,13 @@ async function cancelReservation(id) {
         });
 
         if (response.ok) {
-            alert('Reservierung storniert');
+            alert('Reservation cancelled');
             loadReservations();
             loadDashboard();
         }
     } catch (error) {
-        console.error('Fehler beim Stornieren:', error);
-        alert('Fehler beim Stornieren');
+        console.error('Error cancelling reservation:', error);
+        alert('Error cancelling reservation');
     }
 }
 
@@ -282,7 +282,7 @@ async function loadCustomers() {
                         <th>Name</th>
                         <th>Telefon</th>
                         <th>Email</th>
-                        <th>Beigetreten</th>
+                        <th>Joined</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -292,15 +292,15 @@ async function loadCustomers() {
                             <td>${c.name}</td>
                             <td>${c.phone}</td>
                             <td>${c.email || '-'}</td>
-                            <td>${new Date(c.created_at).toLocaleDateString('de-DE')}</td>
+                            <td>${new Date(c.created_at).toLocaleDateString('en-GB')}</td>
                         </tr>
                     `).join('')}
                 </tbody>
             </table>
-        ` : '<p>Keine Kunden gefunden</p>';
+        ` : '<p>No customers found</p>';
 
         document.getElementById('customers-list').innerHTML = html;
     } catch (error) {
-        console.error('Fehler beim Laden der Kunden:', error);
+        console.error('Error loading customers:', error);
     }
 }
